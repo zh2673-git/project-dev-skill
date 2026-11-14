@@ -76,7 +76,8 @@ origin: preset
 ## 8. 验证收敛：P/Q/I → load tdd
 
 - **P 前置**：环境/依赖/基线就绪？❌ → 阻断修复前置，不进入验证。
-- **Q 后置**：功能正确、指标达标？❌ → 回退（时间流执行错误）。
+- **Q 后置**：功能正确、指标达标？❌ → 回退（时间流执行错误）。技能改动另跑
+  `python scripts/run_evals.py`，旧案例退化即 Q❌。
 - **I 不变量**：既有测试不回归、接口兼容、无泄漏/死锁/越界？❌ → 回退（规则被破坏）。
 - 全 ✅ → 保留（commit / 交付）；协同 LLM 产品加 `validate_llm()`。
 - **时空闭环三问**：所有 init 都有对应 destroy 吗？主循环有不可退出的死循环吗？有跨层直访内存吗？
@@ -87,5 +88,15 @@ origin: preset
 |---|---|
 | 读仓库 / 架构审计 | load `repo-explorer`（快速建图档 or 六步深读档） |
 | 跑测试 / 改后验证 | load `tdd`（run_tests） |
+| 技能开发 / 技能改造 / 技能审计 | load `creat-skill`（生产线前置） |
+| 技能案例 / 评分 / 基线对比 | load `skill-eval` + `python scripts/run_evals.py` |
 | 体量审计 / 大文件拆分 | read_file references `project-development-prompt.md` §3.5（三清单 + 纯搬家纪律） |
 | 模板与完整公理 | read_file `references/project-development-prompt.md` |
+
+## 验收
+
+- [ ] 模式判定有依据；不明确时先反问，不猜；
+- [ ] 正向模式无 program.md 时先出草稿并等待确认，草稿含主要消费者判定；
+- [ ] 消费者含 agent 时调用面契约入时空契约；逆向报告含可调用面结论；
+- [ ] 优化模式有 PLAN 轨迹与回退点，测试未全绿不宣称完成。
+��宣称完成。

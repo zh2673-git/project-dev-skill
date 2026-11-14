@@ -118,6 +118,15 @@
 - **Diff 纪律**：改动 ≤ 50 行直接进测试；> 50 行必须先出《大范围改动合理性说明》并获确认。
 - **简洁优先**：不加未要求的辅助函数 / 装饰器 / 抽象层；不引入技术栈决策之外的依赖。
 
+### 11. Agent-First 调用面：读懂 = 还原设计 + 知道怎么调用
+
+agent 消费软件靠**调用**而非阅读（v0.3.0 新增）：
+
+- **正向**：`program.md` 闸门新增「主要消费者（人 / agent / 两者）」确认项；消费者含 agent 时，interfaces 层按调用面契约设计——子命令式 CLI 优先、`--json` 稳定 schema、退出码表、stdout/stderr 流分离、免交互无 TTY 依赖、幂等与 `--dry-run`。
+- **逆向**：分层审计的数据接口层附查「可调用面」：外部入口清单、`--help` / `--json` / 退出码现状、agent 能否非交互驱动核心用例、缺口按补齐成本排序（包 CLI 子命令 → 参数化输入 → 拆交互依赖）。
+- **演进**：CLI 是 agent 调用的最低公约数（确定性、可组合、退出码可判）；宿主支持 MCP 后，可把成熟 CLI 薄封装为 MCP server（子命令 ↔ tool），两者不冲突。
+- 细则见 `skills/project-dev/references/project-development-prompt.md` §3.6。
+
 ### 10. 自举验证：它自己就是用它自己写出来的
 
 本方法论并非空想产物——它从参考项目的真实开发过程中沉淀而来，而参考项目的方案文档、模块设计、`PLAN.md` 迭代记录，**全部按这套方法产出**。方法论与产物互为验证。
@@ -160,6 +169,9 @@ project-dev-skill/
 └── skills/
     ├── project-dev/                     ← 编排层（入口技能）
     │   ├── SKILL.md                     ← 模式判定 / 阶段路由 / 纪律速查
+    │   ├── PLAN.md                      ← 演进轨迹（审计结论 / 迭代记录 / 已评估不做）
+    │   ├── skill.json / state.json      ← 技能契约与状态机
+    │   ├── evals/                       ← 案例回放与基线（cases.jsonl + results/）
     │   └── references/
     │       └── project-development-prompt.md   ← 权威全文（公理 + 四层 + 报告模板）
     ├── repo-explorer/                   ← 配套：逆向阅读（快速建图 + 六步深读）
