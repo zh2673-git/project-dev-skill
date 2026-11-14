@@ -184,6 +184,19 @@ project-dev-skill/
 
 三个技能是**协作关系**：`project-dev` 是编排层，把「怎么读仓库」路由给 `repo-explorer`、把「怎么跑测试」路由给 `tdd`；三者的完整公理体系与模板都在 `project-dev/references/project-development-prompt.md`。
 
+### 作为「源仓库」使用：与部署副本的一致性
+
+本仓库是这三门技能的**唯一权威源**。把它们装进某个 Agent 运行时后，`<运行时>/skills/{project-dev,repo-explorer,tdd}/` 只是部署副本，容易悄悄落后。若你的运行时是 [rsi-agent](https://github.com/zh2673-git/rsi-agent)，它已把本仓库登记进源仓库表，可机检漂移：
+
+```bash
+python scripts/sync_skills.py --check   # 逐文件比对（对 CRLF/LF 与 BOM 不敏感），漂移则退出码非 0
+python scripts/sync_skills.py --sync --skill tdd --write   # 源仓库 → 部署副本（默认 dry-run）
+```
+
+反向（部署副本更新、要回流本源仓库）没有自动脚本，请手工同步并立刻 `--check` 复核：`--sync` 只会覆盖部署副本，不会把运行时的本地改动带回来。
+
+仓库自用资产（`README.md` / `LICENSE` / `docs/`）不下发到部署副本，不参与比对。
+
 ---
 
 ## 安装与使用
